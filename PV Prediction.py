@@ -1,4 +1,36 @@
 import streamlit as st
+
+# --- PASSWORT ABFRAGE ---
+def check_password():
+    """Gibt True zurück, wenn das Passwort korrekt ist."""
+    def password_entered():
+        if st.session_state["password"] == st.secrets["password"]:
+            st.session_state["password_correct"] = True
+            del st.session_state["password"]  # Passwort aus dem Speicher löschen
+        else:
+            st.session_state["password_correct"] = False
+
+    if "password_correct" not in st.session_state:
+        # Erstmaliges Anzeigen des Login-Feldes
+        st.text_input("Bitte Passwort eingeben", type="password", on_change=password_entered, key="password")
+        return False
+    elif not st.session_state["password_correct"]:
+        # Passwort war falsch
+        st.text_input("Bitte Passwort eingeben", type="password", on_change=password_entered, key="password")
+        st.error("😕 Passwort falsch.")
+        return False
+    else:
+        # Passwort korrekt
+        return True
+
+if not check_password():
+    st.stop()  # Stoppt das Skript hier, wenn nicht eingeloggt
+
+# AB HIER FOLGT DEIN RESTLICHER CODE (st.set_page_config, Berechnungen, etc.)
+
+
+
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import requests
